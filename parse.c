@@ -6,17 +6,20 @@
 /*   By: jalcim <jalcim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/21 23:32:51 by jalcim            #+#    #+#             */
-/*   Updated: 2014/04/22 01:34:00 by jalcim           ###   ########.fr       */
+/*   Updated: 2014/04/22 05:53:15 by jalcim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef struct s_parse t_parse;
-typedef struct s_lex t_lex;
+/* [0][0][0][0] 4D
 
-/*
-[0][0][0][0] 4D
+D5 = *parse
+D4 = **lex
+D3 = *lex->**char
+D2 = *char
+D1 = char
 
-D4 ordenenceur //execution paralle, sequentielle, conditionnel ( '|', ';', "&&", "|| ) suivant flag
+D5 block //futur
+D4 ordenenceur //execution paralle, sequentielle, conditionnel sequentiel, conditionnel parallele( "|", ";", "&&", "||", "&|" ) suivant flag
 D3 commande
 D2 instruction
 D1 unsigned char
@@ -32,70 +35,63 @@ D4 D3 D2 D1
 [0][1][0] ([0]) == cat
 [0][1][1] ([0]) == file
 |
-[1] ([0][0][0]) = ps au	> file
+[1] ([0][0][0]) == ps au	> file
 [1][0][0] ([0]) == ps
 [1][0][1] ([0]) == au
 [1][1][0] ([0]) == >
 [1][2][0] ([0]) == file
 */
 
-/*
-M2 sequance(id)
-M1 instruction(chemin (ptr_fct **))
-ptr_fct(ptr_fct *)
+#include "interpret.h"
 
-(echo "yoo man" > file ; cat file)
-M2 M1
-(echo "yoo man" > file)
-([0][0]) == (init_arg, open, execve, redirfd)
-[0][0] == init_arg("yoo man")
-[0][1] == open(file)
-[0][2] == exec(echo)
-[0][3] == redirfd(0, file)
-
-(cat file)
-([1][0]) == (init_arg, exec)
-[1][0] == init_arg(file)
-[1][1] == exec(cat)
-
-(ps au > file)
-([0][0]) == (init_arg, Predirfd, exec, Rredirfd)
-[0][0] == init_arg(au)
-[0][1] == Predirfd()
-[0][2] == exec(ps)
-[0][3] == Rredirfd()
-*/
-
-/* (>)
-
-[Predirfd]
-fd = open(file)
-dup2(1, pipe[1]);
-[Predirfd]
-
-exec
-
-[Rredirfd]
-read(pipe[0], char *)
-write(fd , char *);
-[Rredirfd]
-*/
-
-struct s_parse
+t_lex ***parse(char *script)
 {
-	t_lex ****matrix;
+	t_lex ***matrix;
+	t_flag *flag;
+	t_word *word;
+	int compt[2] = {-1, -1};
 
-	void (***methode)(void *);
-};
+	flag = loc_flag();
 
-struct s_lex
+	word = init_word(&script);
+	matrix = (t_lex ***)malloc(sizeof(t_lex **));//block
+	matrix[0] = (t_lex **)malloc(flag->nb_cmd * sizeof(t_lex *));//cmd
+	while (++compt[0] <= flag->nb_cmd)
+	{
+		matrix[0][compt[0]] = (t_lex *)malloc(flag->nb_instr * sizeof(t_lex));//instr
+		matrix[0][compt[0]][compt[1]]->instr = word->word[compt[0]];
+	}
+	return (matrix);
+}
+
+int interpret(char *script)
 {
-	char flag;
+	t_parse *program;
 
-	char *cmd;
-};
+	program->matrix = parse(script);
+	program->methode = lex(program->matrix);
+	ordenenceur(program);
+}
 
 int main()
 {
-	parse("echo \"yoo\" > file ; cat file | ps au > file");
+	interpret("echo \"yoo\" > file ; cat file | ps au > file");
+}
+
+char **init_flag()
+{
+	char **flag;
+	int compt;
+
+	compt = -1;
+	flag = (char **)malloc(6 * sizeof(char *));
+	while (++compt < 5)
+		flag[compt] = (char *)malloc(2);
+	strncpy(flag[0], "|", 1);
+	strncpy(flag[1], ";", 1);
+	strncpy(flag[2], "&&", 2);
+	strncpy(flag[3], "||", 2);
+	strncpy(flag[4], "&|", 2);
+	flag[6] = NULL;
+	return (flag);
 }
