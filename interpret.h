@@ -6,7 +6,7 @@
 /*   By: jalcim <jalcim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/22 03:52:03 by jalcim            #+#    #+#             */
-/*   Updated: 2014/04/22 05:34:34 by jalcim           ###   ########.fr       */
+/*   Updated: 2014/04/26 13:51:37 by jalcim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ struct s_lex
 {
 	t_info *info;
 
-	char **instr;
+	unsigned char **instr;
 };
 
 struct s_info	//info ordenancement (par commande)
 {
-	char flag[2]; //("|\0", ";\0", "&&", "||", "&|")
+	unsigned char flag[2]; //("|\0", ";\0", "&&", "||", "&|")
 };
 
 struct s_flag t_flag;
@@ -45,17 +45,17 @@ struct s_flag t_flag;
 	int nb_instr;
 }
 
-struct s_ord
+struct s_ord//au lieu d'un par thread une case par thread(apres nb_thread)
 {
 	int nb_block;
 	int nb_thread;
-	int nb_sequance;
-	int nb_instr;
+	int *nb_sequance;//une case par thread
+	int *nb_instr;//une case par thread
 };
 
 struct s_word
 {
-	char ***word;
+	unsigned char ***word;
 }
 
 struct s_generic

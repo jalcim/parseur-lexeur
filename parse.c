@@ -6,7 +6,7 @@
 /*   By: jalcim <jalcim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/21 23:32:51 by jalcim            #+#    #+#             */
-/*   Updated: 2014/04/22 05:53:15 by jalcim           ###   ########.fr       */
+/*   Updated: 2014/04/26 14:23:48 by jalcim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,24 @@ D4 D3 D2 D1
 
 #include "interpret.h"
 
+t_word *init_word(char *script);
 t_lex ***parse(char *script)
 {
 	t_lex ***matrix;
 	t_flag *flag;
 	t_word *word;
-	int compt[2] = {-1, -1};
+	int compt[2] = {-1, -1};//sequence//cmd
 
 	flag = loc_flag();
-
 	word = init_word(&script);
 	matrix = (t_lex ***)malloc(sizeof(t_lex **));//block
-	matrix[0] = (t_lex **)malloc(flag->nb_cmd * sizeof(t_lex *));//cmd
-	while (++compt[0] <= flag->nb_cmd)
-	{
-		matrix[0][compt[0]] = (t_lex *)malloc(flag->nb_instr * sizeof(t_lex));//instr
-		matrix[0][compt[0]][compt[1]]->instr = word->word[compt[0]];
-	}
+	matrix[0] = (t_lex **)malloc(flag->nb_cmd * sizeof(t_lex *));
+	while (++compt[0] <= ord->nb_sequance)//sequence
+		while (++compt[1] <= flag->nb_cmd)//cmd
+		{
+			matrix[0][compt[0]] = (t_lex *)malloc(flag->nb_instr * sizeof(t_lex));
+			matrix[0][compt[0]][compt[1]]->instr = word->word[compt[0]];//instr(char **)
+		}
 	return (matrix);
 }
 
