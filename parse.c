@@ -6,7 +6,7 @@
 /*   By: jalcim <jalcim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/21 23:32:51 by jalcim            #+#    #+#             */
-/*   Updated: 2014/04/26 14:23:48 by jalcim           ###   ########.fr       */
+/*   Updated: 2014/04/26 18:01:26 by jalcim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ D4 D3 D2 D1
 [0][1][0] ([0]) == cat
 [0][1][1] ([0]) == file
 |
-[1] ([0][0][0]) == ps au	> file
+[1] ([0][0][0]) == ps au > file
 [1][0][0] ([0]) == ps
 [1][0][1] ([0]) == au
 [1][1][0] ([0]) == >
@@ -65,13 +65,35 @@ t_lex ***parse(char *script)
 	return (matrix);
 }
 
+void ordenanceur(t_parse *exe)
+{
+	int compt[4] = {0, 0, 0, 0};
+
+	while (exe->method[0][compt[0]])
+	{	compt[1] = 0;
+		while (exe->method[0][compt[0]][compt[1]])
+		{	compt[2] = 0;
+			while (exe->method[0][compt[0]][compt[1]][compt[2]])
+			{	compt[3] = 0;
+				while (exe->method[0][compt[0]][compt[1]][compt[2]][compt[3]])
+				{
+					processor(exe->method[0][compt[0]][compt[1]][compt[2]][compt[3]]);
+					compt[3]++;
+				}
+				compt[2]++;
+			}
+			compt[1]++;
+		}
+		compt[0]++;
+	}
+}
 int interpret(char *script)
 {
 	t_parse *program;
 
 	program->matrix = parse(script);
 	program->methode = lex(program->matrix);
-	ordenenceur(program);
+	ordenanceur(program);
 }
 
 int main()

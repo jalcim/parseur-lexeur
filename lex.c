@@ -6,7 +6,7 @@
 /*   By: jalcim <jalcim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/22 03:05:07 by jalcim            #+#    #+#             */
-/*   Updated: 2014/04/26 13:48:01 by jalcim           ###   ########.fr       */
+/*   Updated: 2014/04/26 18:15:51 by jalcim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ M5 M4 M3 M2 M1
 [0][1][0][0][0] == init_arg(au)
 [0][1][0][0][1] == Predirfd()
 [0][1][0][0][2] == exec(ps)
-[0][1][0][0][3] == Rredirfd()
+[0][1][0][0][3] == Rredirfd(file)
 */
 
 void *lex(t_lex ***matrix)
@@ -52,13 +52,13 @@ void *lex(t_lex ***matrix)
 	method = (t_method ****)malloc(1 * sizeof(t_method ***));//block
 	method[0] = (t_method ***)malloc(ord->nb_thread * sizeof(t_method **));//thread
 	while (++compt[0] <= ord->nb_thread)
+	{
+		method[0][compt[0]] = (t_method ***)malloc(ord->nb_sequance * sizeof(t_method **));//thread
+		while (++compt[1] <= ord->nb_sequance)
 		{
-			method[0][compt[0]] = (t_method ***)malloc(ord->nb_sequance * sizeof(t_method **));//thread
-			while (++compt[1] <= ord->nb_sequance)
-			{
-				method[0][compt[0]][compt[1]] = (t_method**)malloc(ord->nb_instr * sizeof(t_method *));
-				while (++compt[2] <= ord->nb_instr)
-					method[0][compt[0]][compt[1]][compt[2]] = init_fct(matrix[0][compt[1]][compt[2]]->instr);
-			}
+			method[0][compt[0]][compt[1]] = (t_method**)malloc(ord->nb_instr * sizeof(t_method *));
+			while (++compt[2] <= ord->nb_instr)
+				method[0][compt[0]][compt[1]][compt[2]] = init_fct(matrix[0][compt[1]][compt[2]]->instr);
 		}
+	}
 }
